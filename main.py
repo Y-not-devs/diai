@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from utils.logger import logger
-from api.router import router
+from src.utils.logger import logger
+from src.api.router import router
 from src.llm.chat_llm import ChatBot
-from config import get_settings
+from src.config import get_settings
 
 settings = get_settings()
 
