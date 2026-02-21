@@ -9,8 +9,8 @@ export interface DiagnosisResult {
 
 export interface Message {
   id: string;
-  role: 'user' | 'assistant';
-  type: 'text' | 'diagnosis';
+  role: 'user' | 'assistant' | 'system';
+  type: 'text' | 'diagnosis' | 'error';
   content: string;
   diagnoses?: DiagnosisResult[];
 }

@@ -56,13 +56,18 @@ function App() {
         {
           id: Date.now().toString(),
           role: 'assistant',
-          type: 'text',
-          content: 'Произошла ошибка при соединении с сервером. Пожалуйста, проверьте подключение.',
+          type: 'error',
+          content: 'Не удалось подключиться к серверу. Пожалуйста, проверьте, запущен ли бэкенд.',
         },
       ]);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleResetChat = () => {
+    setMessages([]);
+    setIsLoading(false);
   };
 
   return (
@@ -100,7 +105,10 @@ function App() {
               Анализ крови: отклонения
             </button>
           </div>
-          <button className="mt-4 w-full py-2 rounded-lg border border-white/10 text-white text-sm hover:bg-white/10 transition flex items-center justify-center gap-2">
+          <button 
+            onClick={handleResetChat}
+            className="mt-4 w-full py-2 rounded-lg border border-white/10 text-white text-sm hover:bg-white/10 transition flex items-center justify-center gap-2"
+          >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
             Новый чат
           </button>
@@ -121,7 +129,7 @@ function App() {
         ) : (
           <div className="w-full max-w-3xl flex flex-col gap-2">
             {messages.map((msg) => (
-              <ChatMessage key={msg.id} message={msg} />
+              <ChatMessage key={msg.id} message={msg} onRetry={handleResetChat} />
             ))}
             
             {isLoading && (
