@@ -1,7 +1,7 @@
 [project]
-name = "hack-nu"
+name = "diai"
 version = "0.1.0"
-description = "Evaluates solutions on a given dataset"
+description = "Diagnosis AI Assistant"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
