@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChatInput } from './features/chat/ChatInput';
 import { ChatMessage } from './features/chat/ChatMessage';
-import { sendMessageToAI } from './api/diagnosis';
+import { sendMessageToBackend } from './api/diagnosis';
 import { Message } from './types';
 
 function App() {
@@ -9,6 +9,10 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Временные ID для тестов
+  const [userId] = useState('user-' + Math.random().toString(36).substring(7));
+  const [chatId] = useState('chat-' + Date.now().toString());
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -26,16 +30,36 @@ function App() {
       content: text,
     };
 
-    const updatedMessages = [...messages, newUserMsg];
-    setMessages(updatedMessages);
+    setMessages((prev) => [...prev, newUserMsg]);
     setIsLoading(true);
 
     try {
-      const aiResponse = await sendMessageToAI(updatedMessages);
-      setMessages([...updatedMessages, aiResponse]);
+      const response = await sendMessageToBackend({
+        user_id: userId,
+        chat_id: chatId,
+        text: text,
+      });
+
+      const aiMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        type: response.answer_type === 0 ? 'diagnosis' : 'text',
+        content: response.text,
+        diagnoses: response.answer_type === 0 ? response.diagnosis : undefined,
+      };
+
+      setMessages((prev) => [...prev, aiMsg]);
     } catch (error) {
       console.error('Error sending message:', error);
-      // TODO: Add error handling UI
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          role: 'assistant',
+          type: 'text',
+          content: 'Произошла ошибка при соединении с сервером. Пожалуйста, проверьте подключение.',
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }

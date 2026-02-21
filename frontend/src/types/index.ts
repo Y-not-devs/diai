@@ -14,3 +14,15 @@ export interface Message {
   content: string;
   diagnoses?: DiagnosisResult[];
 }
+
+export interface BackendRequest {
+  user_id: string;
+  chat_id: string;
+  text: string;
+}
+
+export interface BackendResponse {
+  answer_type: 0 | 1;
+  text: string;
+  diagnosis?: DiagnosisResult[];
+}
