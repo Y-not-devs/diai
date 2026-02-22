@@ -92,6 +92,7 @@ class ChatBot:
             raise RuntimeError("Model is not loaded.")
 
         inputs = self._tokenizer(prompt, return_tensors="pt")
+        input_length = inputs["input_ids"].shape[1]
 
         if torch.cuda.is_available():
             inputs = {k: v.to(self._model.device) for k, v in inputs.items()}
@@ -105,7 +106,9 @@ class ChatBot:
                 pad_token_id=self._tokenizer.eos_token_id,
             )
 
-        return self._tokenizer.decode(outputs[0], skip_special_tokens=True)
+        # Decode only the newly generated tokens, not the prompt
+        generated_tokens = outputs[0][input_length:]
+        return self._tokenizer.decode(generated_tokens, skip_special_tokens=True)
 
 if __name__ == "__main__":
 
