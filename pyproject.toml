@@ -1,7 +1,7 @@
 [project]
-name = "diai"
+name = "hack-nu"
 version = "0.1.0"
-description = "Diagnosis AI Assistant"
+description = "Evaluates solutions on a given dataset"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,15 +10,5 @@ dependencies = [
     "aiohttp>=3.9.0",
     "fastapi>=0.115.0",
     "uvicorn>=0.32.0",
-    "ipykernel>=7.2.0",
-    "torch>=2.10.0",
-    "transformers>=5.2.0",
-    "accelerate>=1.12.0",
-    "bitsandbytes>=0.49.2",
-    "pydantic-settings>=2.13.1",
-    "python-dotenv>=1.2.1",
-    "requests>=2.32.5",
-    "sentencepiece>=0.2.1",
-    "protobuf>=6.33.5",
-    "tiktoken>=0.12.0",
+    "ipykernel>=7.2.0"
 ]
