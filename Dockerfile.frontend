@@ -8,8 +8,6 @@ RUN bun install --frozen-lockfile
 
 COPY frontend/ .
 
-ENV VITE_API_URL=http://localhost:8001
-
 EXPOSE 8000
 
-CMD ["bun", "run", "dev", "--host", "0.0.0.0"]
+CMD ["bun", "run", "dev", "--host", "0.0.0.0", "--port", "8000"]
