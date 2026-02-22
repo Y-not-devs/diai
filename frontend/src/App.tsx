@@ -71,9 +71,9 @@ function App() {
   };
 
   return (
-    <div className="h-screen flex flex-col relative overflow-hidden bg-[#050505]">
+    <div className="h-[100dvh] flex flex-col overflow-hidden bg-[#050505]">
       {/* Header */}
-      <header className="w-full p-4 flex justify-between items-center z-30 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md absolute top-0">
+      <header className="shrink-0 w-full p-4 flex justify-between items-center z-30 border-b border-white/5 bg-[#050505]/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -89,10 +89,26 @@ function App() {
         <div className="w-9"></div> {/* Spacer for centering */}
       </header>
 
+      {/* Sidebar overlay (mobile) */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Floating Sidebar */}
-      <div className={`fixed top-20 left-4 bottom-28 w-72 glass-panel z-20 transition-all duration-300 ease-in-out transform ${isSidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-[120%] opacity-0 pointer-events-none'}`}>
+      <div className={`fixed w-72 glass-panel z-30 transition-all duration-300 ease-in-out transform top-0 left-0 h-full md:top-20 md:left-4 md:h-auto md:bottom-4 lg:rounded-2xl rounded-none ${isSidebarOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 pointer-events-none'}`}>
         <div className="p-4 h-full flex flex-col">
-          <h3 className="text-white font-medium mb-4 px-2">История чатов</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-white font-medium">История чатов</h3>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="p-1 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
           <div className="flex-1 overflow-y-auto space-y-2">
             {/* Mock history items */}
             <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 text-gray-300 text-sm transition truncate">
@@ -116,13 +132,13 @@ function App() {
       </div>
 
       {/* Chat Area */}
-      <main className="flex-1 overflow-y-auto pt-20 pb-32 px-4 w-full flex flex-col items-center scroll-smooth">
+      <main className="flex-1 overflow-y-auto px-4 py-4 w-full flex flex-col items-center scroll-smooth">
         {messages.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center max-w-2xl mx-auto animate-in fade-in duration-700">
+          <div className="flex-1 flex flex-col items-center justify-center text-center max-w-2xl mx-auto py-8 animate-in fade-in duration-700">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight text-white">
               Медицинский ИИ-ассистент
             </h1>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-lg px-4">
               Опишите симптомы пациента, и я помогу определить диагноз на основе официальных клинических протоколов РК.
             </p>
           </div>
@@ -152,7 +168,7 @@ function App() {
       </main>
 
       {/* Input Area */}
-      <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent pt-10 pb-6 px-4 z-20">
+      <div className="shrink-0 w-full bg-[#050505] p-4 border-t border-white/5">
         <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
         <p className="text-center text-gray-600 text-xs mt-3">
           ИИ может ошибаться. Всегда сверяйте диагнозы с официальными клиническими протоколами.
