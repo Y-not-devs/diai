@@ -15,7 +15,7 @@ chatbot: ChatBot | None = None  # глобальный объект модели
 async def lifespan(app: FastAPI):
     global chatbot
     logger.info("Loading ChatBot model...")
-    chatbot = ChatBot(model_id=settings.MODEL_ID, hf_token=settings.HF_TOKEN)
+    chatbot = ChatBot(hf_model_id=settings.MODEL_ID, hf_token=settings.HF_TOKEN, model_path=settings.MODEL_PATH, mode=settings.CHAT_BOT_MODE)
     logger.info("ChatBot is ready and always online")
     try:
         yield
