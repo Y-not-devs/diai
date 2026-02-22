@@ -7,8 +7,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen --no-dev
-RUN uv add sentencepiece tiktoken
-
+RUN uv add pydantic-settings
 
 COPY src/ ./src/
 

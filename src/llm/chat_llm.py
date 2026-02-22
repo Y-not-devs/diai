@@ -62,12 +62,8 @@ class ChatBot:
         else:
             logger.info("CUDA not available. Loading model in full precision.")
             bnb_config = None
-
-        self._tokenizer = AutoTokenizer.from_pretrained(
-            self.MODEL_PATH,
-            local_files_only=True,
-            trust_remote_code=True,
-        )
+        print(self.MODEL_PATH)
+        self._tokenizer = AutoTokenizer.from_pretrained(self.MODEL_PATH)
 
         if self._tokenizer.pad_token is None:
             self._tokenizer.pad_token = self._tokenizer.eos_token
