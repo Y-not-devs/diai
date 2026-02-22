@@ -36,8 +36,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
     <div className="glass-panel p-2 w-full max-w-3xl mx-auto flex items-center gap-2 transition-all focus-within:border-white/30 focus-within:bg-white/10">
       <textarea
         ref={textareaRef}
-        className="w-full bg-transparent text-white placeholder-gray-500 p-3 max-h-[200px] focus:outline-none resize-none text-[15px] leading-relaxed"
-        placeholder="Опишите симптомы пациента или ответьте на вопросы..."
+        className="w-full bg-transparent text-white placeholder-gray-500 p-2 max-h-[200px] focus:outline-none resize-none text-[15px] leading-relaxed overflow-hidden"
+        placeholder="Опишите симптомы пациента"
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}

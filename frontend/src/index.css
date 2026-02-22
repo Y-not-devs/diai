@@ -5,6 +5,10 @@
   --color-primary-hover: #1d4ed8;
 }
 
+* {
+    font-family: 'Mona Sans', sans-serif;
+}
+
 body {
   @apply bg-[#050505] text-white min-h-screen font-sans antialiased;
   background-image: 
