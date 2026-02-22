@@ -47,8 +47,8 @@ docker compose up
 ```
 
 - Фронтенд: [http://localhost:8000](http://localhost:8000)
-- Бэкенд API: [http://localhost:8001](http://localhost:8001)
-- Swagger UI: [http://localhost:8001/docs](http://localhost:8001/docs)
+- Бэкенд API: [http://localhost:8001](http://localhost:8080)
+- Swagger UI: [http://localhost:8001/docs](http://localhost:8080/docs)
 
 ---
 
