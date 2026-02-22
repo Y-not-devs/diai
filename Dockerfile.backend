@@ -8,6 +8,7 @@ COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen --no-dev
 RUN uv add sentencepiece tiktoken
+RUN uv add pydantic-settings
 
 
 COPY src/ ./src/

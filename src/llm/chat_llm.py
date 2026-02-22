@@ -1,6 +1,7 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from pathlib import Path
+from typing import Optional
 from huggingface_hub import snapshot_download
 from src.utils.logger import logger
 
@@ -13,7 +14,7 @@ class ChatBot:
         2 = token_update
     """
 
-    def __init__(self, model_path: str, hf_model_id: str, hf_token: str = None, mode: int = 1):
+    def __init__(self, model_path: str, hf_model_id: str, hf_token: Optional[str] = None, mode: int = 1):
         self.MODEL_PATH = Path(model_path)
         self.HF_MODEL_ID = hf_model_id
         self.HF_TOKEN = hf_token
