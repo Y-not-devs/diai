@@ -1,18 +1,23 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
-from config import get_settings
-from api.schemas.chat_request import ChatRequest
-from api.schemas.chat_response import ChatResponse
-from services.chat_service import ChatService
+from ..config import get_settings
+from ..api.schemas.chat_request import ChatRequest
+from ..api.schemas.chat_response import ChatResponse
+from ..services.chat_service import ChatService
+from pathlib import Path
 
 chat_router = APIRouter()
-
 settings = get_settings()
 
+MODEL_PATH = Path(settings.DATA_PATH) / "models" / Path(settings.MODEL_PATH)
+MODEL_PATH.mkdir(parents=True, exist_ok=True)
+
 chat_service = ChatService(
-    model_id=settings.MODEL_ID,
-    hf_token=settings.HF_TOKEN
+    model_path=str(MODEL_PATH),
+    hf_model_id=settings.MODEL_ID,
+    hf_token=settings.HF_TOKEN,
+    mode=settings.CHAT_BOT_MODE
 )
+
 
 @chat_router.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
