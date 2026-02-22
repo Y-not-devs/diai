@@ -217,3 +217,27 @@ __marimo__/
 # Mac OS
 .DS_Store
 **/.DS_Store
+
+
+#ayan-gitignore
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+
+# Env variables
+.env
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
