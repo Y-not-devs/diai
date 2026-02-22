@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+}
+
+* {
+    font-family: 'Mona Sans', sans-serif;
+}
+
+body {
+  @apply bg-[#050505] text-white min-h-screen font-sans antialiased;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+}
+
+.glass-panel {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl;
+}
