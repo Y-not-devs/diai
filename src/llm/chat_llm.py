@@ -63,12 +63,8 @@ class ChatBot:
         else:
             logger.info("CUDA not available. Loading model in full precision.")
             bnb_config = None
-
-        self._tokenizer = AutoTokenizer.from_pretrained(
-            self.MODEL_PATH,
-            local_files_only=True,
-            trust_remote_code=True,
-        )
+        print(self.MODEL_PATH)
+        self._tokenizer = AutoTokenizer.from_pretrained(self.MODEL_PATH)
 
         if self._tokenizer.pad_token is None:
             self._tokenizer.pad_token = self._tokenizer.eos_token
@@ -97,6 +93,7 @@ class ChatBot:
             raise RuntimeError("Model is not loaded.")
 
         inputs = self._tokenizer(prompt, return_tensors="pt")
+        input_length = inputs["input_ids"].shape[1]
 
         if torch.cuda.is_available():
             inputs = {k: v.to(self._model.device) for k, v in inputs.items()}
@@ -110,7 +107,9 @@ class ChatBot:
                 pad_token_id=self._tokenizer.eos_token_id,
             )
 
-        return self._tokenizer.decode(outputs[0], skip_special_tokens=True)
+        # Decode only the newly generated tokens, not the prompt
+        generated_tokens = outputs[0][input_length:]
+        return self._tokenizer.decode(generated_tokens, skip_special_tokens=True)
 
 if __name__ == "__main__":
 

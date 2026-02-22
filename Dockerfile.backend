@@ -7,14 +7,12 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen --no-dev
-RUN uv add sentencepiece tiktoken
-RUN uv add pydantic-settings
-
 
 COPY src/ ./src/
+COPY data/ ./data/
 
 ENV PYTHONUNBUFFERED=1
 
 EXPOSE 8001
 
-CMD ["uv", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["uv", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]

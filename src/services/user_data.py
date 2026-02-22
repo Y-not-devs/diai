@@ -133,3 +133,4 @@ def get_messages(
 
     min_id = result[0]["message_id"] if result else None
     return result, has_more, min_id
+    return result, has_more, min_id
