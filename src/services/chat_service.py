@@ -1,6 +1,6 @@
 from typing import Optional
-from ..api.schemas.chat_response import ChatResponse
-from ..llm.chat_llm import ChatBot
+from src.api.schemas.chat_response import ChatResponse
+from src.llm.chat_llm import ChatBot
 
 
 class ChatService:

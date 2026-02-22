@@ -1,8 +1,8 @@
 from fastapi import APIRouter
-from ..config import get_settings
-from ..api.schemas.chat_request import ChatRequest
-from ..api.schemas.chat_response import ChatResponse
-from ..services.chat_service import ChatService
+from src.config import get_settings
+from src.api.schemas.chat_request import ChatRequest
+from src.api.schemas.chat_response import ChatResponse
+from src.services.chat_service import ChatService
 from pathlib import Path
 
 chat_router = APIRouter()
