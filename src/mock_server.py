@@ -16,6 +16,7 @@ from contextlib import asynccontextmanager
 from typing import Optional
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 
@@ -33,6 +34,32 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Mock Diagnostic Server", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# --- Mock Data ---
+MOCK_CHATS = [
+    {"chat_id": "chat-1", "chat_name": "Головная боль", "updated_at": "2026-02-22T10:00:00Z"},
+    {"chat_id": "chat-2", "chat_name": "Температура 38", "updated_at": "2026-02-21T09:00:00Z"},
+]
+
+MOCK_MESSAGES = {
+    "chat-1": [
+        {"message_id": 1, "role": "user", "text": "Болит голова уже 3 дня", "answer_type": None, "diagnosis": None, "created_at": "2026-02-22T10:00:00Z"},
+        {"message_id": 2, "role": "assistant", "text": "Как давно началась боль и где именно локализуется?", "answer_type": 1, "diagnosis": None, "created_at": "2026-02-22T10:00:05Z"},
+    ],
+    "chat-2": [
+        {"message_id": 3, "role": "user", "text": "Температура 38, кашель", "answer_type": None, "diagnosis": None, "created_at": "2026-02-21T09:00:00Z"},
+        {"message_id": 4, "role": "assistant", "text": "На основании симптомов:", "answer_type": 0, "diagnosis": [
+            {"id": "1", "diagnosis": "Пневмония", "icd_10": "J18.9", "confidence": 0.85, "explanation": "Высокая температура и кашель соответствуют пневмонии", "protocol_title": "Клинический протокол МЗ РК"},
+        ], "created_at": "2026-02-21T09:00:10Z"},
+    ],
+}
 
 ICD_CODES = [
     "A00.13",
@@ -116,3 +143,53 @@ async def handle_diagnose(request: DiagnoseRequest) -> DiagnoseResponse:
         )
 
     return DiagnoseResponse(diagnoses=diagnoses)
+
+# --- Schemas ---
+class ChatMessageRequest(BaseModel):
+    user_id: str
+    chat_id: str
+    text: str
+
+# --- Endpoints ---
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/api/chats")
+def get_chats(user_id: str):
+    return {"chats": MOCK_CHATS}
+
+@app.get("/api/chat_messages")
+def get_chat_messages(chat_id: str, limit: int = 10, before_id: Optional[int] = None):
+    messages = MOCK_MESSAGES.get(chat_id, [])
+    if before_id:
+        messages = [m for m in messages if m["message_id"] < before_id]
+    messages = messages[-limit:]
+    return {
+        "messages": messages,
+        "has_more": False,
+        "min_message_id": messages[0]["message_id"] if messages else None,
+    }
+
+@app.post("/api/chat_message")
+def send_message(body: ChatMessageRequest):
+    if len(body.text) > 30:
+        codes = random.sample(ICD_CODES, 2)
+        return {
+            "message_id": random.randint(100, 999),
+            "role": "assistant",
+            "text": "На основании описанных симптомов наиболее вероятны следующие диагнозы:",
+            "answer_type": 0,
+            "diagnosis": [
+                {"id": str(i+1), "diagnosis": f"Диагноз {code}", "icd_10": code, "confidence": round(random.uniform(0.6, 0.95), 2), "explanation": f"Симптомы соответствуют коду {code}", "protocol_title": "Клинический протокол МЗ РК"}
+                for i, code in enumerate(codes)
+            ]
+        }
+    
+    return {
+        "message_id": random.randint(100, 999),
+        "role": "assistant",
+        "text": "Уточните, как давно появились симптомы и есть ли температура?",
+        "answer_type": 1,
+        "diagnosis": None,
+    }

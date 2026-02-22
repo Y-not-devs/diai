@@ -1,0 +1,18 @@
+services:
+  backend:
+    image: diai-backend
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data   # persist SQLite database
+    restart: unless-stopped
+
+  frontend:
+    image: diai-frontend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - backend
+    restart: unless-stopped
