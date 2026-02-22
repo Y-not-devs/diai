@@ -107,16 +107,28 @@ _BULLET_RE = re.compile(
 _REF_RE = re.compile(r"\[\s*\d+(?:\s*,\s*\d+)*\s*\]")
 _CONTROL_RE = re.compile(r"[\u0000-\u0008\u000b-\u001f\u007f-\u009f]")
 _NB_RE = re.compile(r"\bNB[.!]?\b", re.IGNORECASE)
+_MOJIBAKE_CHARS = set("ЃЌЋЏЎЍђѓќљџї")
 
 
 def _text_quality(text: str) -> int:
     controls = sum(1 for ch in text if "\u0080" <= ch <= "\u009f")
     cyr = sum(1 for ch in text if "\u0400" <= ch <= "\u04ff")
-    return cyr - controls * 5
+    mojibake = sum(1 for ch in text if ch in _MOJIBAKE_CHARS)
+    return cyr - controls * 5 - mojibake * 2
+
+
+def _looks_mojibake(text: str) -> bool:
+    if not text:
+        return False
+    mojibake = sum(1 for ch in text if ch in _MOJIBAKE_CHARS)
+    cyr = sum(1 for ch in text if "\u0400" <= ch <= "\u04ff")
+    if mojibake == 0:
+        return False
+    return cyr > 0 and (mojibake / max(cyr, 1)) > 0.02
 
 
 def _maybe_fix_mojibake(text: str) -> str:
-    if not any("\u0080" <= ch <= "\u009f" for ch in text):
+    if not _looks_mojibake(text):
         return text
     try:
         candidate = text.encode("cp1251").decode("utf-8")
