@@ -93,9 +93,8 @@ def build_chunks(
     *,
     max_chars: int = 1200,
     overlap: int = 200,
-) -> list[Chunk]:
+) -> Iterable[Chunk]:
     output_dir.mkdir(parents=True, exist_ok=True)
-    chunks: list[Chunk] = []
 
     for record in _read_jsonl(input_jsonl):
         protocol_id = str(record.get("protocol_id", "")).strip()
@@ -124,19 +123,15 @@ def build_chunks(
             with path.open("w", encoding="utf-8") as handle:
                 json.dump(payload, handle, ensure_ascii=False)
 
-            chunks.append(
-                Chunk(
-                    chunk_id=chunk_id,
-                    protocol_id=protocol_id,
-                    title=title,
-                    icd_codes=icd_codes,
-                    chunk_index=idx,
-                    text=chunk,
-                    path=str(path),
-                )
+            yield Chunk(
+                chunk_id=chunk_id,
+                protocol_id=protocol_id,
+                title=title,
+                icd_codes=icd_codes,
+                chunk_index=idx,
+                text=chunk,
+                path=str(path),
             )
-
-    return chunks
 
 
 def build_index(db_path: Path, chunks: Iterable[Chunk]) -> None:
